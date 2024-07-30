@@ -1,0 +1,95 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+body{
+    background-color: black;
+    color: white;
+}
+.main{
+   display: flex;
+   background-color: black;
+   color: white;
+}
+.left{
+    width: 25vw;
+    padding: 10px;
+    margin: 3px;
+    height: 100vh;  
+}
+.home{
+    border-radius: 8px;
+    background-color: rgb(22, 21, 21);
+    margin: 5px;
+    padding: 10px;
+}
+
+.home ul li{
+   list-style: none;
+   width: 15px;
+   display: flex;
+   gap: 14px;
+   padding-top: 14px;
+   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+   font-weight: bold;
+}
+img{
+    filter: invert(1);
+}
+
+ .library{
+    background-color: rgb(22, 21, 21);
+    color: white; 
+    margin: 5px;
+    padding-top: 10px;
+ }
+.heading{
+    width: 100%;
+   display: flex;
+   gap: 15px;
+   padding: 23px 14px;
+   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+   font-weight: normal;
+   align-items: center;
+   font-size: 13px;
+}
+.heading img{
+    width: 30px;
+}
+
+.right{
+    width: 75vw;
+    border-radius: 8px;
+    background-color: rgb(22, 21, 21);
+    /* padding: 10px; */
+    margin: 18px 0;
+}
+.footer{ 
+  display: flex;
+  font-size: 12px;
+  gap: 13px;
+  position: absolute;
+  bottom: 0;
+}
+
+.footer a{
+    font-weight: bold;
+     text-decoration: none;
+     color: grey;
+}
+.library{
+    min-height: 78vh;
+    position: relative;
+}
+.nav img{
+    height: 20px;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: rgb(25, 25, 25);
+}
+.spotify-playlist{
+    padding: 16px;
+}
