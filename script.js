@@ -1,141 +1,119 @@
-console.log("let write some java script");
-let currentSong = new Audio();
 
-function SecondsToMinutesSeconds(seconds) {
-    if(isNaN(seconds) || seconds < 0){
-        return "Invalid input";
+console.log("Welcome to Sound-Wave")
+let songindex = 0;
+let audioElement = new Audio('./Songs/1.mp3');
+let masterPlay = document.getElementById('masterPlay');
+let Progressbar = document.getElementById('Progressbar');
+let gif = document.getElementById('gif');
+let masterSongName = document.getElementById('masterSongName');
+let songItems = Array.from(document.getElementsByClassName('songItem'));
+
+let Songs = [
+    { songName: "Tum Hi Ho", filepath: "./Songs/1.mp3", coverPath: "./Cover/1.jpg" },
+    { songName: "Banjara", filepath: "./Songs/2.mp3", coverPath: "./Cover/2.jpg" },
+    { songName: "I Love You", filepath: "./Songs/3.mp3", coverPath: "./Cover/3.jpg" },
+    { songName: "Ishq Sufiyana", filepath: "./Songs/4.mp3", coverPath: "./Cover/4.jpg" },
+    { songName: "Kahaani", filepath: "./Songs/5.mp3", coverPath: "./Cover/5.jpg" },
+    { songName: "Tum Mere Ho", filepath: "./Songs/6.mp3", coverPath: "./Cover/6.jpg" },
+    { songName: "Galliyan", filepath: "./Songs/7.mp3", coverPath: "./Cover/7.jpg" },
+    { songName: "Mere Rang Mein", filepath: "./Songs/8.mp3", coverPath: "./Cover/8.jpg" },
+    { songName: "Tere Liye", filepath: "./Songs/9.m4a", coverPath: "./Cover/9.jpg" },
+    { songName: "Baaten Ye Kabhi Na", filepath: "./Songs/10.mp3", coverPath: "./Cover/10.jpg" }
+]
+
+songItems.forEach((element, i) => {
+    element.getElementsByTagName("img")[0].src = Songs[i].coverPath;
+    element.getElementsByClassName("songName")[0].innerText = Songs[i].songName;
+});
+
+masterPlay.addEventListener('click', () => {
+    if (audioElement.paused || audioElement.currentTime <= 0) {
+        audioElement.play();
+        masterPlay.classList.remove('fa-circle-play');
+        masterPlay.classList.add('fa-circle-pause');
+        gif.style.opacity = 1;
     }
-    // Calculate minutes and remaining seconds
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds =Math.floor(seconds % 60);
-
-    // Pad minutes and seconds with leading zeros if necessary
-    const formattedMinutes = String(minutes).padStart(2, '0');
-    const formattedSeconds = String(remainingSeconds).padStart(2, '0');
-
-    // Return the formatted string
-    return `${formattedMinutes}:${formattedSeconds}`;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-async function getSongs(){
-
-
-let a = await fetch("http://127.0.0.1:5500/songs/")
-let response=await a.text();
-console.log(response)
-let div = document.createElement("div")
-div.innerHTML=response;
-let as = div.getElementsByTagName("a")
-
-
-let songs=[]
-for (let index = 0; index < as.length; index++) {
-    const element = as[index];
-
-    if(element.href.endsWith(".mp3")){
-        songs.push(element.href.split("/songs/")[1])
-    }
-    
-}
-   return songs
-}
-const playMusic = (track, pause=false)=>{
-   
-    currentSong.src = "/songs/" + track
-    if(!pause){
-        currentSong.play()
-    }
-    currentSong.play()
-    play.src="pause.svg"
-    document.querySelector(".songinfo").innerHTML = decodeURI(track)
-    document.querySelector(".songtime").innerHTML = "00:00 / 00:00"
-
-}
-
-
-
-
-async function main(){
-  
-//get the list of all songs
-let songs=await getSongs()
-playMusic(songs[0], true)
-console.log(songs)
-
-let songUL=document.querySelector(".songList").getElementsByTagName("ul")[0]
-for (const song of songs) {
-    songUL.innerHTML = songUL.innerHTML + `<li><img class="invert"  src="music.svg" alt="">
-                  <div class="info">
-                    <div> ${song.replaceAll("%20", " ")}</div>
-                    <div>Rishav raval</div>
-                  </div>
-                  <div class="playnow">
-                    <span>Play Now</span>
-                    <img class="invert"  src="play.svg" alt="">
-                  </div>
-               
-                </li>`;
-    
-}
-
-//attach an even listener to each song 
-
-Array.from(document.querySelector(".songList").getElementsByTagName("li")).forEach(e=>{
-e.addEventListener("click",element=>{
-  console.log(e.querySelector(".info").firstElementChild.innerHTML)
-  playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim())
-})
-})
-
-//attach next and prev
-
-play.addEventListener("click", ()=>{
-    if(currentSong.paused){
-        currentSong.play()
-        play.src="pause.svg"
-    }
-    else{
-        currentSong.pause()
-         play.src="play.svg"
-
+    else {
+        audioElement.pause();
+        masterPlay.classList.remove('fa-circle-pause');
+        masterPlay.classList.add('fa-circle-play');
+        gif.style.opacity = 0;
     }
 })
-
-// listen for time update
-
-currentSong.addEventListener("timeupdate", ()=>{
-    console.log(currentSong.currentTime, currentSong.duration);
-    document.querySelector(".songtime").innerHTML= `$
-    {secondsToMinutesSeconds(currentSong.currentTime)}/$
-    {secondsToMinutesSeconds(currentSong.duration)}`
-    document.querySelector(".circle").style.left = 
-    (currentSong.currentTime/ currentSong.duration) * 100 + "%";
+// Listen to Events
+audioElement.addEventListener('timeupdate', () => {
+    // console.log('timeupdate');
+    Progress = parseInt((audioElement.currentTime / audioElement.duration) * 100);
+    // console.log(Progress);
+    Progressbar.value = Progress;
 })
 
-
-
-document.querySelector(".seekbar").addEventListener("click", e=>{
-    let percent = (e.offsetX/e.target.getBoundingClientRect().width) * 100
-    document.querySelector(".circle").style.left = percent + "%";
-    currentSong.currentTime = ((currentSong.duration) * percent)/100
+Progressbar.addEventListener('change', () => {
+    audioElement.currentTime = Progressbar.value * audioElement.duration / 100;
 })
- 
+
+const makeAllPlays = () => {
+    Array.from(document.getElementsByClassName('songItemPlay')).forEach((element) => {
+        element.classList.add('fa-circle-play')
+        element.classList.remove('fa-circle-pause')
+    })
 }
 
+Array.from(document.getElementsByClassName('songItemPlay')).forEach((element) => {
+    element.addEventListener('click', (e) => {
+        if (e.target.classList.contains('fa-circle-play')) {
+            makeAllPlays();
+            songindex = parseInt(e.target.id);
+            e.target.classList.remove('fa-circle-play');
+            e.target.classList.add('fa-circle-pause');
+            audioElement.src = `./Songs/${songindex + 1}.mp3`;
+            masterSongName.innerText = Songs[songindex].songName;
+            audioElement.currentTime = 0;
+            audioElement.play();
+            gif.style.opacity = 1;
+            masterPlay.classList.remove('fa-circle-play');
+            masterPlay.classList.add('fa-circle-pause');
+        }
+        else {
+            e.target.classList.remove('fa-circle-pause');
+            e.target.classList.add('fa-circle-play');
+            audioElement.currentTime = 1;
+            audioElement.pause();
+            gif.style.opacity = 0;
+            masterPlay.classList.add('fa-circle-play');
+            masterPlay.classList.remove('fa-circle-pause');
+        }
+    });
+});
 
+document.getElementById('next').addEventListener('click', () => {
+    if (songindex >= 9) {
+        songindex = 0;
+    }
+    else {
+        songindex += 1;
+    }
+    audioElement.src = `./Songs/${songindex + 1}.mp3`;
+    masterSongName.innerText = Songs[songindex].songName;
+    audioElement.currentTime = 0;
+    audioElement.play();
+    gif.style.opacity = 1;
+    masterPlay.classList.add('fa-circle-play');
+    masterPlay.classList.remove('fa-circle-pause');
+})
 
-main()
+document.getElementById('previous').addEventListener('click', () => {
+    if (songindex <= 0) {
+        songindex = 0;
+    }
+    else {
+        songindex -= 1;
+    }
+    audioElement.src = `./Songs/${songindex + 1}.mp3`;
+    masterSongName.innerText = Songs[songindex].songName;
+    audioElement.currentTime = 0;
+    audioElement.play();
+    gif.style.opacity = 1;
+    masterPlay.classList.add('fa-circle-play');
+    masterPlay.classList.remove('fa-circle-pause');
+})
